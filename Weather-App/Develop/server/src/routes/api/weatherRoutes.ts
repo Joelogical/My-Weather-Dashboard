@@ -1,9 +1,10 @@
 import { Router, type Request, type Response } from 'express';
-// Importing services (make sure to adjust import paths as needed)
+const router = Router();
+
 import HistoryService from '../../service/historyService.js';
 import WeatherService from '../../service/weatherService.js';
 
-const router = Router();
+
 
 // POST request to retrieve weather data and save city to history
 router.post('/', async (req: Request, res: Response) => {

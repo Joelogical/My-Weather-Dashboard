@@ -11,7 +11,7 @@ const router = Router();
 // Define route to serve index.html
 router.get('/', (req: Request, res: Response) => {
   // Serve the index.html file from the dist folder
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
 export default router;
