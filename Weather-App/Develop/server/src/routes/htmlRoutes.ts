@@ -1,10 +1,17 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
+
+// Get the current file's path and directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const router = Router();
 
-// TODO: Define route to serve index.html
+// Define route to serve index.html
+router.get('/', (req: Request, res: Response) => {
+  // Serve the index.html file from the dist folder
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
 export default router;
