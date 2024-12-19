@@ -1,10 +1,8 @@
-import { Router, type Request, type Response } from 'express';
+import { Router, Request, Response } from 'express';
 const router = Router();
 
-import HistoryService from '../../service/historyService.js';
-import WeatherService from '../../service/weatherService.js';
-
-
+import HistoryService from '../../service/historyService'; // Ensure correct import
+import WeatherService from '../../service/weatherService'; // Ensure correct import
 
 // POST request to retrieve weather data and save city to history
 router.post('/', async (req: Request, res: Response) => {
@@ -16,31 +14,31 @@ router.post('/', async (req: Request, res: Response) => {
 
   try {
     // 1. Get weather data for the city using WeatherService
-    const weatherData = await WeatherService.getWeather(city);
+    const weatherData = await WeatherService.getWeatherForCity(city);
 
-    // 2. Save city to the search history
-    await HistoryService.saveToHistory(city);
+    // 2. Save city to the search history using HistoryService
+    await HistoryService.addCity(city); // Adjusted to addCity() method
 
     // 3. Respond with weather data
-    res.status(200).json({
+    return res.status(200).json({
       weather: weatherData,
       message: `Weather data for ${city} retrieved successfully.`,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching weather data or saving city to history' });
+    return res.status(500).json({ error: 'Error fetching weather data or saving city to history' });
   }
 });
 
 // GET search history
-router.get('/history', async (req: Request, res: Response) => {
+router.get('/history', async (_req: Request, res: Response) => {
   try {
-    // Get all cities in the search history
-    const history = await HistoryService.getHistory();
-    res.status(200).json({ history });
+    // 1. Get all cities in the search history using HistoryService
+    const cities = await HistoryService.getCities(); // Adjusted to getCities() method
+    return res.status(200).json({ history: cities });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error retrieving search history' });
+    return res.status(500).json({ error: 'Error retrieving search history' });
   }
 });
 
@@ -53,15 +51,16 @@ router.delete('/history/:id', async (req: Request, res: Response) => {
   }
 
   try {
-    // Delete city from the history using HistoryService
-    await HistoryService.deleteFromHistory(id);
+    // 1. Delete city from the history using HistoryService
+    await HistoryService.removeCity(id); // Adjusted to removeCity() method
 
-    // Respond with a success message
-    res.status(200).json({ message: `City with ID ${id} deleted from history successfully.` });
+    // 2. Respond with a success message
+    return res.status(200).json({ message: `City with ID ${id} deleted from history successfully.` });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error deleting city from history' });
+    return res.status(500).json({ error: 'Error deleting city from history' });
   }
 });
 
 export default router;
+
