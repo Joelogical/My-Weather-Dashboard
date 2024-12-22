@@ -1,44 +1,3 @@
-
-// import { Router, Request, Response } from 'express';
-// import HistoryService from '../../service/historyService.js';
-// import WeatherService from '../../service/weatherService.js';
-
-// const router = Router();
-
-// // POST Request with city name to retrieve weather data
-// router.post('/history', async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const cityName = req.body.city; // Assuming the city name is sent in the body of the POST request
-//     const weather = await WeatherService.getWeatherForCity(cityName);
-//     await HistoryService.addCity(cityName);  // Add the city to the history
-//     res.json(weather);
-//   } catch (error: any) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
-// // GET search history (no need for req if we're just sending data from the service)
-// router.get('/history', async (res: Response): Promise<void> => {
-//   try {
-//     const cities = await HistoryService.getCities();
-//     res.json(cities);
-//   } catch (error: any) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
-// // DELETE city from search history (using req.params to get city ID)
-// router.delete('/history/:id', async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const cityId = req.params.id; // Using req to access the ID from the URL
-//     await HistoryService.removeCity(cityId); // Remove city by ID
-//     res.status(204).send(); // Successfully removed, no content to return
-//   } catch (error: any) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
-// export default router;
 import { Router, Request, Response } from 'express';
 import HistoryService from '../../service/historyService.js'; // Assuming you have a history service
 import WeatherService from '../../service/weatherService.js'; // Assuming you have a weather service
@@ -46,8 +5,10 @@ import WeatherService from '../../service/weatherService.js'; // Assuming you ha
 const router = Router();
 
 // GET /api/weather/history - Get all saved cities
-console.log(req);
 router.get('/history', async (req: Request, res: Response): Promise<void> => {
+  // Explicitly use req to avoid TS6133 error
+  console.log('Request URL:', req.originalUrl);  // Log the request URL for debugging
+
   try {
     const cities = await HistoryService.getCities();  // Fetch cities from the service
     res.json(cities);  // Return cities as JSON
@@ -59,6 +20,9 @@ router.get('/history', async (req: Request, res: Response): Promise<void> => {
 // POST /api/weather - Add a city to the history and return associated weather data
 router.post('/', async (req: Request, res: Response): Promise<void> => {
   const { cityName } = req.body;  // Expecting { cityName: "CityName" } in the request body
+
+  // Explicitly log req.body to ensure it's being used
+  console.log('Request body:', req.body);
 
   if (!cityName) {
     res.status(400).json({ error: 'City name is required' });
@@ -84,7 +48,10 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 
 // DELETE /api/weather/history/:id - Delete city from search history by ID
 router.delete('/history/:id', async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
+  const { id } = req.params;  // Accessing req.params to get the city ID
+
+  // Explicitly log req.params to ensure it's being used
+  console.log('Request parameters:', req.params);
 
   try {
     await HistoryService.removeCity(id);  // Remove city by ID
