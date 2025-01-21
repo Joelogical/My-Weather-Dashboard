@@ -84,7 +84,7 @@
 
 // export default new HistoryService();
 import fs from 'fs';
-import path from 'path';
+// import path from 'path';
 import { v4 as uuidv4 } from 'uuid';  // Using the 'uuid' package to generate unique IDs
 
 // Define the City class
@@ -94,16 +94,16 @@ class City {
 
 // Define the HistoryService class
 class HistoryService {
-  private filePath: string;
+  // private filePath: string;
 
-  constructor() {
-    this.filePath = path.join(__dirname, 'searchHistory.json');  // Correct path handling for ES modules
-  }
+  // constructor() {
+    // this.filePath = path.join(__dirname, 'searchHistory.json');  // Correct path handling for ES modules
+  // }
 
   // Read method to read from the searchHistory.json file
   private async read(): Promise<City[]> {
     return new Promise((resolve, reject) => {
-      fs.readFile(this.filePath, 'utf8', (err, data) => {
+      fs.readFile("db.json", 'utf8', (err, data) => {
         if (err) {
           reject('Error reading search history file');
           return;
@@ -116,7 +116,7 @@ class HistoryService {
   // Write method to write updated cities array to the searchHistory.json file
   private async write(cities: City[]): Promise<void> {
     return new Promise((resolve, reject) => {
-      fs.writeFile(this.filePath, JSON.stringify(cities, null, 2), 'utf8', (err) => {
+      fs.writeFile("db.json", JSON.stringify(cities, null, 2), 'utf8', (err) => {
         if (err) {
           reject('Error writing to search history file');
           return;
@@ -142,6 +142,7 @@ class HistoryService {
       const cities = await this.read();
       const newCity = new City(uuidv4(), cityName);  // Use uuid to create a unique ID
       cities.push(newCity);
+      console.log(cities);
       await this.write(cities);
       return newCity;
     } catch (error) {

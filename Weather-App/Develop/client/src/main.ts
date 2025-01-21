@@ -35,6 +35,8 @@ API Calls
 */
 
 const fetchWeather = async (cityName: string) => {
+  console.log("fetching eweather:", cityName)
+
   const response = await fetch('/api/weather/', {
     method: 'POST',
     headers: {
@@ -45,7 +47,7 @@ const fetchWeather = async (cityName: string) => {
 
   const weatherData = await response.json();
 
-  console.log('weatherData: ', weatherData);
+  console.log('weatherData:', weatherData);
 
   renderCurrentWeather(weatherData[0]);
   renderForecast(weatherData.slice(1));
@@ -77,11 +79,12 @@ Render Functions
 */
 
 const renderCurrentWeather = (currentWeather: any): void => {
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
+  const { date, icon, iconDescription, tempF, windSpeed, humidity } =
     currentWeather;
-
+    console.log("currentWeather:", currentWeather)
+    
   // convert the following to typescript
-  heading.textContent = `${city} (${date})`;
+  heading.textContent = `(${date})`;
   weatherIcon.setAttribute(
     'src',
     `https://openweathermap.org/img/w/${icon}.png`

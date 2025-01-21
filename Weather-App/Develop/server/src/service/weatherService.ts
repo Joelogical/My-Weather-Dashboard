@@ -13,10 +13,12 @@ interface Coordinates {
 // Weather class to structure the weather data
 class Weather {
   constructor(
-    public temperature: number,
+    public tempF: number,
     public humidity: number,
     public windSpeed: number,
-    public description: string
+    public iconDescription: string,
+    public date: string,
+    public icon: string,
   ) {}
 }
 
@@ -55,26 +57,30 @@ class WeatherService {
 
   // Parse current weather data from the API response
   private parseCurrentWeather(response: any): Weather {
-    const { temp, humidity } = response.main;
-    const { speed } = response.wind;
-    const description = response.weather[0].description;
-    return new Weather(temp, humidity, speed, description);
+    const tempF = response.main;
+    const humidity  = response.main;
+    const windSpeed = response.main;
+    const iconDescription = response.weather[0].description;
+    const icon = response.weather[0].icon;
+    const date = response.dt_txt;
+    return new Weather(tempF, humidity, windSpeed, icon, iconDescription, date);
   }
 
   // Build the forecast array
   private buildForecastArray(weatherData: any[]): Weather[] {
     return weatherData.map((data: any) => {
-      return new Weather(data.main.temp, data.main.humidity, data.wind.speed, data.weather[0].description);
+      return new Weather(data.main.iconDescription, data.main.icon, data.main.tempF, data.main.humidity, data.main.windSpeed, data.weather[0].description );
     });
   }
 
   // Get weather data for a specific city (including forecast)
   async getWeatherForCity(city: string): Promise<Weather[]> {
     try {
+      // this.cityName = city
       const coordinates = await this.fetchLocationData(city); // Get coordinates for the city
       const weatherData = await this.fetchWeatherData(coordinates); // Fetch weather data using coordinates
       const currentWeather = this.parseCurrentWeather(weatherData); // Parse the current weather from the API response
-
+      console.log(currentWeather)
       // To get a 5-day forecast, you would use a different API endpoint:
       const forecastData = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}&units=metric`);
       
@@ -84,6 +90,7 @@ class WeatherService {
       // Return both current and forecast weather data
       return [currentWeather, ...forecast];
     } catch (error: any) {
+      console.log("error", error)
       throw new Error('Error fetching weather data: ' + error.message);
     }
   }
