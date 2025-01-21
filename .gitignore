@@ -1,7 +1,0 @@
-node_modules
-
-# .env file
-WEATHER_API_KEY=1096a1c7051e17d60035c17c8cfffcc4
-
-.env
-

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1eaefc082e75024b89175e0c1216840652b61a34
 // export default new HistoryService();
 import fs from 'fs';
 import path from 'path';

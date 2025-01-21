@@ -5,8 +5,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = Router();
 // Define route to serve index.html
+<<<<<<< HEAD
 console.log(req);
 router.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
+=======
+router.get('/', (req, res) => {
+    console.log('Request URL:', req.originalUrl); // Use req explicitly to avoid unused warning
+    const indexPath = path.join(__dirname, '../public/index.html');
+    res.sendFile(indexPath, (err) => {
+        if (err) {
+            res.status(500).json({ error: 'Failed to load index.html' });
+        }
+    });
+>>>>>>> 1eaefc082e75024b89175e0c1216840652b61a34
 });
 export default router;
