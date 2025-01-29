@@ -57,9 +57,9 @@ class WeatherService {
 
   // Parse current weather data from the API response
   private parseCurrentWeather(response: any): Weather {
-    const tempF = response.main;
-    const humidity  = response.main;
-    const windSpeed = response.main;
+    const tempF = response.main.temp;
+    const humidity  = response.main.humidity;
+    const windSpeed = response.wind.speed;
     const iconDescription = response.weather[0].description;
     const icon = response.weather[0].icon;
     const date = response.dt_txt;
@@ -69,6 +69,7 @@ class WeatherService {
   // Build the forecast array
   private buildForecastArray(weatherData: any[]): Weather[] {
     return weatherData.map((data: any) => {
+      console.log(data)
       return new Weather(data.main.iconDescription, data.main.icon, data.main.tempF, data.main.humidity, data.main.windSpeed, data.weather[0].description );
     });
   }
